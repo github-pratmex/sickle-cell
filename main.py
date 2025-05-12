@@ -3,8 +3,25 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import io
+import os
+from fastapi.middleware.cors import CORSMiddleware
+
+# Suppress TensorFlow warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress info and warning messages from TensorFlow
+
+# Force TensorFlow to use CPU (if a GPU is available, it will be ignored)
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # This will disable GPU
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change this to your frontend URL for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Load the model
 interpreter = tf.lite.Interpreter(model_path="model.tflite")
